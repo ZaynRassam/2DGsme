@@ -7,7 +7,8 @@ public class PlayerMovementScript : MonoBehaviour
     [SerializeField] characterController controller;
     [SerializeField] float runSpeed;
     private float xMove;
-    private float zMove;
+    private bool jump;
+    private bool crouch;
 
     // Start is called before the first frame update
     void Start()
@@ -20,13 +21,25 @@ public class PlayerMovementScript : MonoBehaviour
     void Update()
     {
         xMove = Input.GetAxisRaw("Horizontal") * runSpeed;
-        zMove = Input.GetAxisRaw("Vertical");
+        
+        if (Input.GetButtonDown("Jump"))
+        {
+            jump = true;
+        } 
+        if (Input.GetButtonDown("Crouch"))
+        {
+            crouch = true;
+        } else if (Input.GetButtonUp("Crouch"))
+        {
+            crouch = false;
+        }
+
     }
 
-    void FixedUpdate()
+        void FixedUpdate()
     {
         // Move Character
-        controller.Move(xMove * Time.fixedDeltaTime, false, false);
-
+        controller.Move(xMove * Time.fixedDeltaTime, crouch, jump);
+        jump = false;
     }
 }
